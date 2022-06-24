@@ -1,6 +1,6 @@
 # NSFW API
 
-[![build](https://github.com/arnidan/nsfw-api/actions/workflows/build.yml/badge.svg)](https://github.com/arnidan/nsfw-api/actions/workflows/build.yml)
+[![build](https://github.com/fjc0k/nsfw-api/actions/workflows/build.yml/badge.svg)](https://github.com/arnidan/nsfw-api/actions/workflows/build.yml)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
 
 Wrapper around [NSFWJS](https://github.com/infinitered/nsfwjs) to provide API.
@@ -12,7 +12,7 @@ Wrapper around [NSFWJS](https://github.com/infinitered/nsfwjs) to provide API.
 There is docker image bundled with model v3 from https://github.com/gantman/nsfw_model.
 
 ```
-docker run -p 3000:3000 ghcr.io/arnidan/nsfw-api:latest
+docker run -p 3000:3000 jayfong/nsfw-api:latest
 ```
 
 <details>
@@ -23,7 +23,7 @@ version: "3.9"
 
 services:
   nsfw-api:
-    image: "ghcr.io/arnidan/nsfw-api:latest"
+    image: "jayfong/nsfw-api:latest"
     ports:
       - "3000:3000"
     restart: always
@@ -45,6 +45,7 @@ Now app started on port 3000.
 
 - POST /classify
 - POST /classify-many
+- POST /classify-url
 
 ### POST /classify
 
@@ -114,4 +115,30 @@ Content-Type: application/json
         "drawing": 0.00029983260901644826
     }
 ]
+```
+
+### POST /classify-url
+
+#### Example of the request
+
+```http request
+GET /classify-url?url=xxxxx HTTP/1.1
+```
+
+Image should be provided in `url` field.
+
+#### Example of the response
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+```json
+{
+    "porn": 0.59248286485672,
+    "sexy": 0.39802199602127075,
+    "hentai": 0.006243097595870495,
+    "neutral": 0.0031403270550072193,
+    "drawing": 0.00011181648733327165
+}
 ```

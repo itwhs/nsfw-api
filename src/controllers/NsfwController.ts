@@ -1,7 +1,8 @@
-import {Controller, Post} from 'simple-ts-express-decorators';
+import {Controller, Post, Get} from 'simple-ts-express-decorators';
 import multer, {memoryStorage} from 'multer';
 import {Request, Response} from 'express';
 import {NsfwImageClassifier} from 'app/NsfwImageClassifier';
+import axios from 'axios';
 
 const upload = multer({storage: memoryStorage()});
 
@@ -38,5 +39,40 @@ export class NsfwController {
     const data = await this.classifier.classifyMany(buffers);
 
     return response.json(data);
+  }
+
+  @Get('/classify-url')
+  async classifyUrl(request: Request, response: Response) {
+    if (!request.query || typeof request.query.url !== 'string') {
+      return response
+        .status(410)
+        .json({error: 'Specify url'});
+    }
+
+    try {
+      const res = await axios.get(request.query.url, {
+        headers: {
+          referer: request.query.url,
+          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
+        },
+        timeout: 6000,
+        responseType: 'arraybuffer',
+        validateStatus: () => true
+      });
+      
+      if (res.status < 200 || res.status >= 300) {
+        return response
+          .status(410)
+          .json({error: res.statusText});
+      }
+  
+      const data = await this.classifier.classify(res.data);
+  
+      return response.json(data);
+    } catch(err) {
+      return response
+        .status(410)
+        .json({error: String(err)});
+    }
   }
 }

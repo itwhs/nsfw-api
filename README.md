@@ -12,7 +12,7 @@ Wrapper around [NSFWJS](https://github.com/infinitered/nsfwjs) to provide API.
 There is docker image bundled with model v3 from https://github.com/gantman/nsfw_model.
 
 ```
-docker run -p 3000:3000 jayfong/nsfw-api:latest
+docker run -p 3000:3000 qingjiubaba/nsfw-api:latest
 ```
 
 <details>
@@ -23,7 +23,7 @@ version: "3.9"
 
 services:
   nsfw-api:
-    image: "jayfong/nsfw-api:latest"
+    image: "qingjiubaba/nsfw-api:latest"
     ports:
       - "3000:3000"
     restart: always

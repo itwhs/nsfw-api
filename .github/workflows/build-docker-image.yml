@@ -11,6 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          docker login -u jayfong -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          docker build -f ./Dockerfile -t jayfong/nsfw-api:latest .
-          docker push jayfong/nsfw-api:latest
+          docker login -u ${{ secrets.DOCKERHUB_NAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker build -f ./Dockerfile -t ${{ secrets.DOCKERHUB_NAME }}/nsfw-api:latest .
+          docker push ${{ secrets.DOCKERHUB_NAME }}/nsfw-api:latest

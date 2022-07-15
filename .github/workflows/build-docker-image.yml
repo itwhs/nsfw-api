@@ -45,9 +45,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/xxoo:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/xxoo:${{ steps.date.outputs.today }}
-      - name: Copy ghcr.io/arnidan/nsfw-api To Docker.Hub
-        uses: actions/checkout@v2
-      - run: |
-          docker pull ghcr.io/arnidan/nsfw-api:latest
-          docker tag ghcr.io/arnidan/nsfw-api:latest ${{ secrets.DOCKERHUB_NAME }}/ghcr.io_arnidan_nsfw-api:latest
-          docker push ${{ secrets.DOCKERHUB_NAME }}/ghcr.io_arnidan_nsfw-api:latest

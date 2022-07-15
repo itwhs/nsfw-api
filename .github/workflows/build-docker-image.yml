@@ -38,7 +38,7 @@ jobs:
           context: .
           file: ./Dockerfile
 # 所需要的体系结构，可以在 Available platforms 步骤中获取所有的可用架构
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64
 # 镜像推送时间
           push: ${{ github.event_name != 'pull_request' }}
 # 给清单打上多个标签
@@ -46,7 +46,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/xxoo:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/xxoo:${{ steps.date.outputs.today }}
       - name: Copy ghcr.io/arnidan/nsfw-api To Docker.Hub
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - run: |
           docker pull ghcr.io/arnidan/nsfw-api:latest
           docker tag ghcr.io/arnidan/nsfw-api:latest ${{ secrets.DOCKERHUB_NAME }}/ghcr.io_arnidan_nsfw-api:latest

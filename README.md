@@ -123,6 +123,8 @@ Content-Type: application/json
 
 ```http request
 GET /classify-url?url=xxxxx HTTP/1.1
+
+示例:http://192.168.1.10:3000/classify-url?url=https://wework.qpic.cn/wwpic/182450_9tfUhp_bRDqxqQh_1644640601
 ```
 
 Image should be provided in `url` field.

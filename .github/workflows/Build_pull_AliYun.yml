@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  # 定时调度
+  schedule:
+    - cron: "0 0 * * 1"
       
 jobs:
   buildx:

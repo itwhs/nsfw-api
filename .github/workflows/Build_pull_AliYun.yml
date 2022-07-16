@@ -1,0 +1,50 @@
+name: Build img pull AliYun
+
+on:
+  push:
+    branches:
+      - master
+      
+jobs:
+  buildx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=today::$(date +'%Y%m%d%H%M%S')"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+
+      - uses: actions/checkout@v2 # pull代码到运行服务器上
+      - name: Login to Aliyun Container Registry (ACR)
+        uses: aliyun/acr-login@v1 # 使用阿里云镜像服务action
+        with:
+          login-server: registry.cn-hangzhou.aliyuncs.com # 务必正确填写镜像容器服务的登录地址
+          region-id: cn-hangzhou # 务必正确填写镜像容器服务的登录地址
+          username: "${{ secrets.ALIYUN_DOCKER_USERNAME }}" # 引用GitHub repo设置的镜像容器服务用户名
+          password: "${{ secrets.ALIYUN_DOCKER_PASSWORD }}" # 引用GitHub repo设置的镜像容器服务密码
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile
+# 所需要的体系结构，可以在 Available platforms 步骤中获取所有的可用架构
+          platforms: linux/amd64
+# 镜像推送时间
+          push: ${{ github.event_name != 'pull_request' }}
+# 给清单打上多个标签
+          tags: |
+            registry.cn-hangzhou.aliyuncs.com/${{ secrets.ALIYUN_DOCKER_NAMESPACE }}/nsfw-api:latest
+            registry.cn-hangzhou.aliyuncs.com/${{ secrets.ALIYUN_DOCKER_NAMESPACE }}/nsfw-api:${{ steps.date.outputs.today }}
